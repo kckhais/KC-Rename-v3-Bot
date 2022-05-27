@@ -5,7 +5,10 @@ services:
       API_ID: $API_ID
       API_HASH: $API_HASH
       BOT_TOKEN: $BOT_TOKEN	
-      IS_MONGO: $IS_MONGO
+      MONGODB_URI: $MONGODB_URI
+      LOG_CHANNEL: $LOG_CHANNEL
+      OWNER_ID: $OWNER_ID
+
     resources:
       cpu: 1000m
       memory: 3Gi
