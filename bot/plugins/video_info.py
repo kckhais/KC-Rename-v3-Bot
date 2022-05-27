@@ -1,8 +1,10 @@
-
+# (c) @AbirHasan2005
 
 import os
 import time
 import json
+import shlex
+import shutil
 from bot.client import (
     Client
 )
@@ -20,9 +22,20 @@ from bot.core.display import progress_for_pyrogram
 from bot.core.file_info import get_file_attr
 
 
+def filesystem_free(path='.'):
+    _, __, free = shutil.disk_usage(".")
+    return free
+
+
 @Client.on_message(filters.command("video_info") & filters.private & ~filters.edited)
 async def video_info_handler(c: Client, m: Message):
     await add_user_to_database(c, m)
+    if filesystem_free() < 5000000000:
+        return await m.reply_text(
+            "Because of less server space I can't do this task right now !!\n\n"
+            "Please try again after some time or use @AHToolsBot to do same task.",
+            True
+        )
     if (not m.reply_to_message) or (len(m.command) == 1):
         await m.reply_text(f"Reply to video with,\n/{m.command[0]} `--change-title` new title `--change-video-title` new video title `--change-audio-title` new audio title `--change-subtitle-title` new subtitle title `--change-file-name` new file name", True)
         return
@@ -53,6 +66,7 @@ async def video_info_handler(c: Client, m: Message):
         return
     editable = await m.reply_text("Downloading Video ...", quote=True)
     dl_loc = Config.DOWNLOAD_DIR + "/" + str(m.from_user.id) + "/" + str(m.message_id) + "/"
+    root_dl_loc = dl_loc
     if not os.path.isdir(dl_loc):
         os.makedirs(dl_loc)
     c_time = time.time()
@@ -66,19 +80,15 @@ async def video_info_handler(c: Client, m: Message):
             c_time
         )
     )
-    await editable.edit("Trying to Fetch Media Data ...")
-    output = await execute(f"ffprobe -hide_banner -show_streams -print_format json '{the_media}'")
+    await editable.edit("Trying to Fetch Media Metadata ...")
+    output = await execute(f"ffprobe -hide_banner -show_streams -print_format json {shlex.quote(the_media)}")
     if not output:
-        try:
-            os.remove(the_media)
-        except Exception as error:
-            print(f"Error: {error}")
-        await editable.edit("Can't fetch media info!")
-        return
+        await rm_dir(root_dl_loc)
+        return await editable.edit("Can't fetch media info!")
 
     try:
         details = json.loads(output[0])
-        middle_cmd = f"ffmpeg -i '{the_media}' -c copy -map 0"
+        middle_cmd = f"ffmpeg -i {shlex.quote(the_media)} -c copy -map 0"
         if title:
             middle_cmd += f' -metadata title="{title}"'
         for stream in details["streams"]:
@@ -88,21 +98,17 @@ async def video_info_handler(c: Client, m: Message):
                 middle_cmd += f' -metadata:s:{stream["index"]} title="{audio_title}"'
             elif (stream["codec_type"] == "subtitle") and subtitle_title:
                 middle_cmd += f' -metadata:s:{stream["index"]} title="{subtitle_title}"'
-        dl_loc = Config.DOWNLOAD_DIR + "/" + \
-                 str(m.from_user.id) + "/" + \
-                 str(m.message_id) + "/" + \
-                 str(time.time()).replace(".", "") + "/"
+        dl_loc = dl_loc + str(time.time()).replace(".", "") + "/"
         if not os.path.isdir(dl_loc):
             os.makedirs(dl_loc)
-        middle_cmd += f" '{dl_loc}{new_file_name}'"
+        middle_cmd += f" {shlex.quote(dl_loc + new_file_name)}"
         await editable.edit("Please Wait ...\n\nProcessing Video ...")
-        output = await execute(middle_cmd)
-        print(output, flush=True)
+        await execute(middle_cmd)
         await editable.edit("Renamed Successfully!")
     except:
         # Clean Up
         await editable.edit("Failed to process video!")
-        await rm_dir(f"{Config.DOWNLOAD_DIR}/{m.from_user.id}/{m.message_id}/")
+        await rm_dir(root_dl_loc)
         return
     try: os.remove(the_media)
     except: pass
@@ -114,7 +120,7 @@ async def video_info_handler(c: Client, m: Message):
             if (_m_attr and _m_attr.thumbs) \
             else None
     if _default_thumb_:
-        _default_thumb_ = await c.download_media(_default_thumb_, f"{Config.DOWNLOAD_DIR}/{m.message_id}/{m.from_user.id}/")
+        _default_thumb_ = await c.download_media(_default_thumb_, root_dl_loc)
     if (not upload_as_doc) and m.reply_to_message.video:
         await c.upload_video(
             chat_id=m.chat.id,
@@ -122,7 +128,6 @@ async def video_info_handler(c: Client, m: Message):
             thumb=_default_thumb_ or None,
             editable_message=editable,
         )
-
     else:
         await c.upload_document(
             chat_id=m.chat.id,
@@ -130,9 +135,4 @@ async def video_info_handler(c: Client, m: Message):
             editable_message=editable,
             thumb=_default_thumb_ or None
         )
-
-    try:
-        os.remove(f"{dl_loc}{new_file_name}")
-        if _default_thumb_:
-            os.remove(_default_thumb_)
-    except: pass
+    await rm_dir(root_dl_loc)

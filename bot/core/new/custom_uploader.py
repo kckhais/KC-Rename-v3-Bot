@@ -1,4 +1,4 @@
- & @subinps
+# (c) @AbirHasan2005 & @subinps
 # Bruh!
 # Took a huge time to make this script.
 # So Plis,

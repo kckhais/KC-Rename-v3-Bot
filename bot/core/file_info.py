@@ -1,4 +1,4 @@
-
+# (c) @AbirHasan2005
 
 from pyrogram.types import Message
 

@@ -1,3 +1,5 @@
+# (c) @AbirHasan2005
+
 import math
 import time
 import asyncio

@@ -1,4 +1,4 @@
-
+# (c) @AbirHasan2005
 
 import traceback
 from typing import Union
@@ -172,7 +172,7 @@ async def handle_big_rename(
     if (not _db_caption) and (apply_caption is True):
         caption = m.reply_to_message.caption.markdown \
             if m.reply_to_message.caption \
-            else "**Developer: @KCFilmss**"
+            else "**Developer: @AbirHasan2005**"
     elif _db_caption and (apply_caption is True):
         caption = _db_caption
     else:

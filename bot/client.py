@@ -1,3 +1,5 @@
+# (c) @AbirHasan2005
+
 from typing import Union
 from pyromod import listen
 from pyrogram import Client as RawClient

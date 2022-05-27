@@ -1,4 +1,4 @@
-
+# (c) @AbirHasan2005
 
 import asyncio
 from typing import (
@@ -66,7 +66,7 @@ class SendFloodedMessage:
             )
             return __SEND
         except FloodWait as e:
-            if e.x > 30:
+            if e.x > 120:
                 return None
             print(f"Sleeping for {e.x}s")
             await asyncio.sleep(e.x)
