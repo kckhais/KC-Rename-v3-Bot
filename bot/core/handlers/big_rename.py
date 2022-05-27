@@ -1,5 +1,3 @@
-# (c) @AbirHasan2005
-
 import traceback
 from typing import Union
 from bot.client import Client

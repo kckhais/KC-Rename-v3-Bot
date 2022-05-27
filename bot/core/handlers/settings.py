@@ -1,5 +1,3 @@
-# (c) @AbirHasan2005
-
 import asyncio
 from pyrogram import types, errors
 from configs import Config

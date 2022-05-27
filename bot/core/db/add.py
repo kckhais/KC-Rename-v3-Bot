@@ -1,5 +1,3 @@
-# (c) @AbirHasan2005
-
 from configs import Config
 from .database import db
 from pyrogram import Client

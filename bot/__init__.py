@@ -1,5 +1,3 @@
-# (c) @AbirHasan2005
-
 from dotenv import load_dotenv
 import bot.client
 

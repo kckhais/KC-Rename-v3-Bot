@@ -1,5 +1,3 @@
-# (c) @AbirHasan2005
-
 import shutil
 import aiofiles.os
 from configs import Config

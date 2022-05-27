@@ -1,5 +1,3 @@
-# (c) @AbirHasan2005
-
 from configs import Config
 from bot.client import Client
 from pyrogram.types import Message

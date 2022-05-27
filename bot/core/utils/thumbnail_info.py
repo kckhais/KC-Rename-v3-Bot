@@ -1,5 +1,3 @@
-# (c) @AbirHasan2005
-
 from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
 

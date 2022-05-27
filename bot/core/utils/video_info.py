@@ -1,5 +1,3 @@
-# (c) @AbirHasan2005
-
 import json
 import asyncio
 import subprocess
