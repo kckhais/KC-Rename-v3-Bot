@@ -1,4 +1,4 @@
-# (c) @AbirHasan2005
+
 
 import asyncio
 from bot.client import Client

@@ -1,4 +1,4 @@
-# (c) @AbirHasan2005
+
 
 from PIL import Image
 from hachoir.parser import createParser

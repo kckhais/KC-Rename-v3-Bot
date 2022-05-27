@@ -1,5 +1,3 @@
-# (c) @AbirHasan2005
-
 import os
 import logging
 

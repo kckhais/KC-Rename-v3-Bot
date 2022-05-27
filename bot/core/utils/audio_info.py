@@ -1,4 +1,4 @@
-# (c) @AbirHasan2005
+
 
 from mutagen import mp3, wave, aac
 

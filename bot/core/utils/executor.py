@@ -1,4 +1,4 @@
-# (c) @AbirHasan2005
+
 
 import shlex
 import asyncio

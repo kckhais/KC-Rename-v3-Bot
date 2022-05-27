@@ -1,4 +1,4 @@
-# (c) @AbirHasan2005
+
 
 import shutil
 import psutil

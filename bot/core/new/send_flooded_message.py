@@ -1,4 +1,4 @@
-# (c) @AbirHasan2005
+
 
 import asyncio
 from typing import (
